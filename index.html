@@ -9,13 +9,32 @@
   </head>
 
   <body>
-    <div id="root">
-    </div>
-
+    <header>
+      <h1>Game of Thrones</h1>
+    <p style="text-align: center;">
+  Data originally from <a href="https://tvmaze.com" target="_blank">TVMaze.com</a>
+    </p>
+    </header>
+    <div id="root"></div>
+    <div id="container"></div>
+    <template id="episode-card">
+    <section class="episode"> 
+    <div class="header">
+    <h3>Episode title</h3>
+    <p class="season"></p>
+    <p class="number"></p>
+   </div>
+      <a href="#">
+      <img src="" alt="Episode image">
+    </a>
+        <p class="summary">Summary</p>
+    </section>
+    </template>
+    
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+    <script src="episodes.js" ></script>
 
     <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
+    <script src="script.js" ></script>
   </body>
 </html>
