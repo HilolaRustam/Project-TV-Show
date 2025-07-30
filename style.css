@@ -1,3 +1,88 @@
+/* Base styles */
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+header {
+  background-color: #1f1f1f;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+header a {
+  color: #90caf9;
+  text-decoration: none;
+}
+
+header a:hover {
+  text-decoration: underline;
+}
+
+/* Episode count display */
 #root {
-  color: red;
+  text-align: center;
+  margin: 1rem auto;
+  font-size: 1.2rem;
+  color: #b0bec5;
+}
+
+/* Episode container */
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 1rem;
+  justify-content: center;
+}
+
+/* Card styles */
+.episode {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 10px;
+  width: 300px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.episode:hover {
+  transform: scale(1.02);
+}
+
+.episode img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.episode h3 {
+  color: #ffffff;
+  margin: 0.5rem 0;
+}
+
+.episode .season,
+.episode .number {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  margin: 0;
+}
+
+.episode .summary {
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  color: #cccccc;
+  line-height: 1.4;
 }
