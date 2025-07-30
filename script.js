@@ -9,7 +9,20 @@ function formatEpisodeCode(season, number) {
   const numberStr = number.toString().padStart(2, "0");
   return `S${seasonStr}E${numberStr}`;
 }
+  // Create a card for each episode from the template.
+function createEpisodeCard(episode) {
+const template = document.getElementById("episode-card"); //Get the template element.
+const card = template.content.cloneNode(true); //Clone the template
 
+// Format episode code
+const episodeCode = formatEpisodeCode(episode.season, episode.number);
+// Fill in the episode details in the cloned template.
+card.querySelector("h3").textContent = `${episode.name} - ${episodeCode}`;
+card.querySelector("img").src = episode.image.medium;
+card.querySelector("img").alt = episode.name;
+card.querySelector(".summary").innerHTML = episode.summary;
+return card; //return the filled card.
+};
 
 
 
