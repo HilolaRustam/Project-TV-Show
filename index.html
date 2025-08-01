@@ -1,40 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | Hilola Rustamova (HilolaRustam)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
 
-  <body>
-    <header>
-      <h1>Game of Thrones</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Show Project | Hilola Rustamova (HilolaRustam)</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+  <header>
+    <h1>Game of Thrones</h1>
     <p style="text-align: center;">
-  Data originally from <a href="https://tvmaze.com" target="_blank">TVMaze.com</a>
+      Data originally from <a href="https://tvmaze.com" target="_blank">TVMaze.com</a>
     </p>
-    </header>
-    <div id="root"></div>
-    <div id="container"></div>
-    <template id="episode-card">
-    <section class="episode"> 
-    <div class="header">
-    <h3>Episode title</h3>
-    <p class="season"></p>
-    <p class="number"></p>
-   </div>
+  </header>
+  <div id="root">
+    <label for="episodeSelect">Select Episode</label>
+      <select id="episodeSelect">
+        <option value="">-- Select an episode --</option>
+      </select>
+    <label for="searchInput">Search</label>
+    <input type="text" id="searchInput">
+    <p id="episode-count"></p>
+  </div>
+  <div id="container"></div>
+  <template id="episode-card">
+    <section class="episode">
+      <div class="header">
+        <h3>Episode title</h3>
+        <p class="season"></p>
+        <p class="number"></p>
+      </div>
       <a href="#">
-      <img src="" alt="Episode image">
-    </a>
-        <p class="summary">Summary</p>
+        <img src="" alt="Episode image">
+      </a>
+      <p class="summary">Summary</p>
     </section>
-    </template>
-    
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js" ></script>
+  </template>
 
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js" ></script>
-  </body>
+  <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+  <script src="episodes.js" ></script>
+
+  <!-- Loads YOUR javascript code -->
+  <script src="script.js" ></script>
+</body>
 </html>
