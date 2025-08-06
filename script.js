@@ -1,16 +1,24 @@
 //You can edit ALL of the code here
-function setup() {
-  const allEpisodes = getAllEpisodes(); //Get all episodes from episode.js
+let allEpisodes=[];
+async function setup() {
+  allEpisodes = await fetchEpisodes(); //Get all episodes from episode.js
+  
   makePageForEpisodes(allEpisodes, allEpisodes.length); //Generate the episode cards.
+  populateEpisodeSelect();
 };
 
-function search(search) {
-  const allEpisodes = getAllEpisodes(); //Get all episodes from episode.js
-  console.log(allEpisodes[0].name);
+async function fetchEpisodes() {
+  const url = `https://api.tvmaze.com/shows/82/episodes`;
+  const response = await fetch(url);     
+  const data = await response.json(); 
+  return data;   
+  };
+
+function search(searchText) {
   const searchEpisodes = allEpisodes.filter(
     (episode) =>
-      episode.summary.toLowerCase().includes(search.toLowerCase()) ||
-      episode.name.toLowerCase().includes(search.toLowerCase())
+      episode.summary.toLowerCase().includes(searchText.toLowerCase()) ||
+      episode.name.toLowerCase().includes(searchText.toLowerCase())
   );
   makePageForEpisodes(searchEpisodes, allEpisodes.length); //Generate the episode cards.
 };
@@ -50,30 +58,27 @@ function makePageForEpisodes(episodeList, numberOfTotal) {
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
-  const searchText = this.value;
-  search(searchText); // This function should be defined elsewhere
+  search(this.value); // This function should be defined elsewhere
 });
 
 document.getElementById("episodeSelect").addEventListener("change", function () {
     const index = this.value;
     if (index === "") {
-      makePageForEpisodes(getAllEpisodes()); // show all episodes
+      makePageForEpisodes(allEpisodes,allEpisodes.length); // show all episodes
     } else {
-      const selectedEpisode = getAllEpisodes()[index];
+      const selectedEpisode = allEpisodes[index];
       makePageForEpisodes([selectedEpisode]); // show only selected
     }
   });
 function populateEpisodeSelect() {
-  const allEpisodes = getAllEpisodes(); // Get episodes from your episode.js
   const select = document.getElementById("episodeSelect");
-
+  select.innerHTML="";
   allEpisodes.forEach((episode, index) => {
     const option = document.createElement("option");
     option.value = index; // or you can use a unique ID if available
-    option.textContent = `${episode.name}`;
+    option.textContent = episode.name;
     select.appendChild(option);
   });
-}
+};
 
-window.addEventListener("DOMContentLoaded", populateEpisodeSelect);
 window.onload = setup;
