@@ -1,4 +1,4 @@
-let serieNo=10;
+let serieNo = 10;
 
 function search(searchTerm) {
   const searchEpisodes = allEpisodes.filter(
@@ -74,7 +74,7 @@ document
   .getElementById("episodeSelect")
   .addEventListener("change", async function () {
     const index = this.value;
-    
+
     if (index === "") {
       makePageForEpisodes(allEpisodes, allEpisodes.length);
     } else {
@@ -87,16 +87,10 @@ document
   .addEventListener("change", async function () {
     const allSeries = await getAllSeries();
     const index = this.value;
-
-    if (index === "") {
-      //makePageForSeries(allSeries, allSeries.length);
-    } else {
-      //makePageForSeries(allSeries[index], allSeries.length);
-    }
-    serieNo=[allSeries[index]].Id
-    const allEpisodes = getAllEpisodes(serieNo);
+    serieNo = allSeries[index].id;
+    allEpisodes = await getAllEpisodes(serieNo); // Store globally
+    await populateEpisodeSelect(serieNo, allEpisodes);
     makePageForEpisodes(allEpisodes, allEpisodes.length);
-    await populateEpisodeSelect(serieNo);
   });
 
 async function getAllSeries() {
@@ -115,6 +109,7 @@ async function getAllEpisodes(serieNo) {
 
 async function populateSeriesSelect() {
   const select = document.getElementById("seriesSelect");
+  const episodeSlection = document.getElementById("episodeSelect");
   const allSeries = await getAllSeries();
   makePageForSeries(allSeries, allSeries.length);
 
@@ -125,18 +120,27 @@ async function populateSeriesSelect() {
     select.appendChild(option);
   });
 }
-async function populateEpisodeSelect(serieNo) {
-  const allEpisodes = await getAllEpisodes(serieNo);
+async function populateEpisodeSelect(serieNo, allEpisodes) {
   const select = document.getElementById("episodeSelect");
+  select.innerHTML = ""; // Clear old options
 
+  // Add a default option
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Select Episode";
+  select.appendChild(defaultOption);
+
+  // Add episodes
   allEpisodes.forEach((episode, index) => {
     const option = document.createElement("option");
     option.value = index;
     option.textContent = episode.name;
     select.appendChild(option);
   });
+
+  select.selectedIndex = 0; // Reset to the first option
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
   await populateSeriesSelect();
- });
+});
