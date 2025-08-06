@@ -76,7 +76,8 @@ function populateEpisodeSelect() {
   allEpisodes.forEach((episode, index) => {
     const option = document.createElement("option");
     option.value = index; // or you can use a unique ID if available
-    option.textContent = episode.name;
+    const episodeCode = formatEpisodeCode(episode.season, episode.number);
+    option.textContent = `${episodeCode} - ${episode.name}`;
     select.appendChild(option);
   });
 };
