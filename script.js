@@ -5,6 +5,27 @@ function search(searchTerm) {
     (episode) =>
       episode.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
       episode.name.toLowerCase().includes(searchTerm.toLowerCase())
+//You can edit ALL of the code here
+let allEpisodes=[];
+async function setup() {
+  allEpisodes = await fetchEpisodes(); //Get all episodes from episode.js
+  
+  makePageForEpisodes(allEpisodes, allEpisodes.length); //Generate the episode cards.
+  populateEpisodeSelect();
+};
+
+async function fetchEpisodes() {
+  const url = `https://api.tvmaze.com/shows/82/episodes`;
+  const response = await fetch(url);     
+  const data = await response.json(); 
+  return data;   
+  };
+
+function search(searchText) {
+  const searchEpisodes = allEpisodes.filter(
+    (episode) =>
+      episode.summary.toLowerCase().includes(searchText.toLowerCase()) ||
+      episode.name.toLowerCase().includes(searchText.toLowerCase())
   );
   makePageForEpisodes(searchEpisodes, allEpisodes.length);
 }
@@ -67,7 +88,9 @@ function makePageForSeries(seriesList, numberOfTotal) {
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
+
   search(this.value);
+
 });
 
 document
@@ -144,3 +167,22 @@ async function populateEpisodeSelect(serieNo, allEpisodes) {
 window.addEventListener("DOMContentLoaded", async () => {
   await populateSeriesSelect();
 });
+      makePageForEpisodes(allEpisodes,allEpisodes.length); // show all episodes
+    } else {
+      const selectedEpisode = allEpisodes[index];
+      makePageForEpisodes([selectedEpisode]); // show only selected
+    }
+  });
+function populateEpisodeSelect() {
+  const select = document.getElementById("episodeSelect");
+  select.innerHTML="";
+  allEpisodes.forEach((episode, index) => {
+    const option = document.createElement("option");
+    option.value = index; // or you can use a unique ID if available
+    const episodeCode = formatEpisodeCode(episode.season, episode.number);
+    option.textContent = `${episodeCode} - ${episode.name}`;
+    select.appendChild(option);
+  });
+};
+
+window.onload = setup;
