@@ -1,31 +1,10 @@
-let serieNo = 10;
+let serieNo=10;
 
 function search(searchTerm) {
   const searchEpisodes = allEpisodes.filter(
     (episode) =>
       episode.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
       episode.name.toLowerCase().includes(searchTerm.toLowerCase())
-//You can edit ALL of the code here
-let allEpisodes=[];
-async function setup() {
-  allEpisodes = await fetchEpisodes(); //Get all episodes from episode.js
-  
-  makePageForEpisodes(allEpisodes, allEpisodes.length); //Generate the episode cards.
-  populateEpisodeSelect();
-};
-
-async function fetchEpisodes() {
-  const url = `https://api.tvmaze.com/shows/82/episodes`;
-  const response = await fetch(url);     
-  const data = await response.json(); 
-  return data;   
-  };
-
-function search(searchText) {
-  const searchEpisodes = allEpisodes.filter(
-    (episode) =>
-      episode.summary.toLowerCase().includes(searchText.toLowerCase()) ||
-      episode.name.toLowerCase().includes(searchText.toLowerCase())
   );
   makePageForEpisodes(searchEpisodes, allEpisodes.length);
 }
@@ -88,16 +67,14 @@ function makePageForSeries(seriesList, numberOfTotal) {
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
-
   search(this.value);
-
 });
 
 document
   .getElementById("episodeSelect")
   .addEventListener("change", async function () {
     const index = this.value;
-
+    
     if (index === "") {
       makePageForEpisodes(allEpisodes, allEpisodes.length);
     } else {
@@ -110,10 +87,16 @@ document
   .addEventListener("change", async function () {
     const allSeries = await getAllSeries();
     const index = this.value;
-    serieNo = allSeries[index].id;
-    allEpisodes = await getAllEpisodes(serieNo); // Store globally
-    await populateEpisodeSelect(serieNo, allEpisodes);
+
+    if (index === "") {
+      //makePageForSeries(allSeries, allSeries.length);
+    } else {
+      //makePageForSeries(allSeries[index], allSeries.length);
+    }
+    serieNo=[allSeries[index]].Id
+    const allEpisodes = getAllEpisodes(serieNo);
     makePageForEpisodes(allEpisodes, allEpisodes.length);
+    await populateEpisodeSelect(serieNo);
   });
 
 async function getAllSeries() {
@@ -132,7 +115,6 @@ async function getAllEpisodes(serieNo) {
 
 async function populateSeriesSelect() {
   const select = document.getElementById("seriesSelect");
-  const episodeSlection = document.getElementById("episodeSelect");
   const allSeries = await getAllSeries();
   makePageForSeries(allSeries, allSeries.length);
 
@@ -143,46 +125,18 @@ async function populateSeriesSelect() {
     select.appendChild(option);
   });
 }
-async function populateEpisodeSelect(serieNo, allEpisodes) {
+async function populateEpisodeSelect(serieNo) {
+  const allEpisodes = await getAllEpisodes(serieNo);
   const select = document.getElementById("episodeSelect");
-  select.innerHTML = ""; // Clear old options
 
-  // Add a default option
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = "Select Episode";
-  select.appendChild(defaultOption);
-
-  // Add episodes
   allEpisodes.forEach((episode, index) => {
     const option = document.createElement("option");
     option.value = index;
     option.textContent = episode.name;
     select.appendChild(option);
   });
-
-  select.selectedIndex = 0; // Reset to the first option
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
   await populateSeriesSelect();
-});
-      makePageForEpisodes(allEpisodes,allEpisodes.length); // show all episodes
-    } else {
-      const selectedEpisode = allEpisodes[index];
-      makePageForEpisodes([selectedEpisode]); // show only selected
-    }
-  });
-function populateEpisodeSelect() {
-  const select = document.getElementById("episodeSelect");
-  select.innerHTML="";
-  allEpisodes.forEach((episode, index) => {
-    const option = document.createElement("option");
-    option.value = index; // or you can use a unique ID if available
-    const episodeCode = formatEpisodeCode(episode.season, episode.number);
-    option.textContent = `${episodeCode} - ${episode.name}`;
-    select.appendChild(option);
-  });
-};
-
-window.onload = setup;
+ });

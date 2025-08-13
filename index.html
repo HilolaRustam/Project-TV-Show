@@ -17,10 +17,14 @@
     </p>
   </header>
   <div id="root">
+    <label for="seriesSelect">Select Series</label>
+    <select id="seriesSelect">
+      <option value="">-- Select a Series --</option>
+    </select>
     <label for="episodeSelect">Select Episode</label>
-      <select id="episodeSelect">
-        <option value="">-- Select an episode --</option>
-      </select>
+    <select id="episodeSelect">
+      <option value="">-- Select an episode --</option>
+    </select>
     <label for="searchInput">Search</label>
     <input type="text" id="searchInput">
     <p id="episode-count"></p>
@@ -39,7 +43,30 @@
       <p class="summary">Summary</p>
     </section>
   </template>
+
+  <template id="serie-card">
+    <section class="serie">
+      <div class="header">
+        <h3>Serie title</h3>
+        <div>
+          <a href="#">
+            <img src="" alt="Episode image">
+          </a>
+          <p class="summary">Summary</p>
+        </div>
+        <p class="rate"></p>
+        <p class="genres"></p>
+        <p class="status"></p>
+        <p class="runtime"></p>
+      </div>
+    </section>
+  </template>
+
+  <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+  <script src="episodes.js"></script>
+
   <!-- Loads YOUR javascript code -->
-  <script src="script.js" ></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
