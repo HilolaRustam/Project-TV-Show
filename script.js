@@ -2,21 +2,27 @@ let seriesNo = {};
 let allEpisodes = [];
 let allSeriesList = [];
 let currentView = "series";
-const fetchCache = {};
+const fetchCache = {}; // catch for fetch results
+
+async function fetchWithCache(url) {
+  if (fetchCache[url])return fetchCache[erl];
+  const response = await fetch(url);
+  const data = await response.json();
+  fetchCache[url] = data;
+  return data;
+}
 
 async function setup() {
   allEpisodes = await fetchEpisodes(); //Get all episodes from episode.js
   
   makePageForEpisodes(allEpisodes, allEpisodes.length); //Generate the episode cards.
   populateEpisodeSelect();
-};
+}
 
 async function fetchEpisodes() {
   const url = `https://api.tvmaze.com/shows/82/episodes`;
-  const response = await fetch(url);     
-  const data = await response.json(); 
-  return data;   
-  };
+  return await fetchWithCache(url);     
+  }
 
 function search(searchText) {
   const searchEpisodes = allEpisodes.filter(
@@ -81,12 +87,12 @@ function makePageForSeries(seriesList, numberOfTotal) {
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
-  if (currentView === "shows") {
+  if (currentView === "series") {
     const text = this.value.toLowerCase();
-    const filtered = allSeriesList.filter(show =>
-      show.name.toLowerCase().includes(text) ||
-      show.genres.join(", ").toLowerCase().includes(text) ||
-      (show.summary && show.summary.toLowerCase().includes(text))
+    const filtered = allSeriesList.filter(series =>
+      series.name.toLowerCase().includes(text) ||
+      series.genres.join(", ").toLowerCase().includes(text) ||
+      (series.summary && series.summary.toLowerCase().includes(text))
     );
     makePageForSeries(filtered, allSeriesList.length);
   } else {
