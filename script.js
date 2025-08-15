@@ -1,6 +1,8 @@
 let seriesNo = {};
-let allEpisodes=[];
-//You can edit ALL of the code here
+let allEpisodes = [];
+let allSeriesList = [];
+let currentView = "series";
+const fetchCache = {};
 
 async function setup() {
   allEpisodes = await fetchEpisodes(); //Get all episodes from episode.js
@@ -26,10 +28,7 @@ function search(searchText) {
 }
 
 function formatEpisodeCode(season, number) {
-  return `S${String(season).padStart(2, "0")}E${String(number).padStart(
-    2,
-    "0"
-  )}`;
+  return `S${String(season).padStart(2, "0")}E${String(number).padStart(2,"0")}`;
 }
 
 function createEpisodeCard(episode) {
@@ -48,7 +47,6 @@ function createSeriesCard(series) {
   const template = document.getElementById("series-card");
   const card = template.content.cloneNode(true);
 
-  const episodeCode = formatEpisodeCode(series.season, series.number);
   card.querySelector("h3").textContent = series.name;
   card.querySelector("img").src = series.image.medium;
   card.querySelector("img").alt = series.name;
@@ -64,7 +62,7 @@ function makePageForEpisodes(episodeList, numberOfTotal) {
   const rootElem = document.getElementById("episode-count");
   rootElem.textContent = `${episodeList.length} / ${numberOfTotal} Episodes`;
 
-  const container = document.getElementById("container");
+  const container = document.getElementById("episode-container");
   container.innerHTML = "";
 
   const episodeCards = episodeList.map(createEpisodeCard);
@@ -75,17 +73,25 @@ function makePageForSeries(seriesList, numberOfTotal) {
   const rootElem = document.getElementById("episode-count");
   rootElem.textContent = `${seriesList.length} / ${numberOfTotal} Series`;
 
-  const container = document.getElementById("container");
-  container.innerHTML = "";
+  const seriesContainer = document.getElementById("episode-container");
+  seriesContainer.innerHTML = "";
 
   const seriesCards = seriesList.map(createSeriesCard);
-  seriesCards.forEach((card) => container.appendChild(card));
+  seriesCards.forEach((card) => seriesContainer.appendChild(card));
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
-
+  if (currentView === "shows") {
+    const text = this.value.toLowerCase();
+    const filtered = allSeriesList.filter(show =>
+      show.name.toLowerCase().includes(text) ||
+      show.genres.join(", ").toLowerCase().includes(text) ||
+      (show.summary && show.summary.toLowerCase().includes(text))
+    );
+    makePageForSeries(filtered, allSeriesList.length);
+  } else {
   search(this.value);
-
+  }
 });
 
 document
@@ -159,7 +165,7 @@ async function populateEpisodeSelect(seriesNo, allEpisodes) {
 
   select.selectedIndex = 0; // Reset to the first option
 }
-
+// Start with shows list
 window.addEventListener("DOMContentLoaded", async () => {
   await populateSeriesSelect();
 });
