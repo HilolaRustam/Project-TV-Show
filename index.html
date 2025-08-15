@@ -27,8 +27,9 @@
     <label for="searchInput">Search</label>
     <input type="text" id="searchInput">
     <p id="episode-count"></p>
+    <button id="backToSeries" style="display:none;">Back to Series</button>
   </div>
-  <div id="container"></div>
+  <div id="episode-container" class="container"></div>
   <template id="episode-card">
     <section class="episode">
       <div class="header">
@@ -42,7 +43,7 @@
       <p class="summary">Summary</p>
     </section>
   </template>
-
+<div id="series-container" class="container"></div>
   <template id="series-card">
     <section class="series">
       <div class="header">
@@ -53,10 +54,12 @@
           </a>
           <p class="summary">Summary</p>
         </div>
+        <div class="details">
         <p class="rate"></p>
         <p class="genres"></p>
         <p class="status"></p>
         <p class="runtime"></p>
+        </div>
       </div>
     </section>
   </template>
