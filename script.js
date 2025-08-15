@@ -13,7 +13,7 @@ async function fetchWithCache(url) {
 }
 
 async function setup() {
-  allEpisodes = await fetchEpisodes(); //Get all episodes from episode.js
+  allEpisodes = await fetchEpisodes(); 
   
   makePageForEpisodes(allEpisodes, allEpisodes.length); //Generate the episode cards.
   populateEpisodeSelect();
@@ -85,7 +85,7 @@ function makePageForSeries(seriesList, numberOfTotal) {
   const seriesCards = seriesList.map(createSeriesCard);
   seriesCards.forEach((card) => seriesContainer.appendChild(card));
 }
-
+ // Search that handel both views series and episodes
 document.getElementById("searchInput").addEventListener("input", function () {
   if (currentView === "series") {
     const text = this.value.toLowerCase();
@@ -99,7 +99,7 @@ document.getElementById("searchInput").addEventListener("input", function () {
   search(this.value);
   }
 });
-
+ // Episode select
 document
   .getElementById("episodeSelect")
   .addEventListener("change", async function () {
@@ -111,16 +111,18 @@ document
       makePageForEpisodes([allEpisodes[index]], allEpisodes.length);
     }
   });
-
+// Series select
 document
   .getElementById("seriesSelect")
   .addEventListener("change", async function () {
-    const allSeries = await getAllSeries();
     const index = this.value;
-    seriesNo = allSeries[index].id;
-    allEpisodes = await getAllEpisodes(seriesNo); // Store globally
+    if (!index) return;
+    seriesNo = index;
+    allEpisodes = await getAllEpisodes(seriesNo); // Stored globally
     await populateEpisodeSelect(seriesNo, allEpisodes);
     makePageForEpisodes(allEpisodes, allEpisodes.length);
+    currentView = "episodes";
+    backToSeriesBtn.style.display="inline-block";
   });
 
 async function getAllSeries() {
@@ -136,21 +138,21 @@ async function getAllEpisodes(seriesNo) {
   const data = await response.json();
   return data;
 }
-
+ // Populate Series Select
 async function populateSeriesSelect() {
   const select = document.getElementById("seriesSelect");
-  const episodeSelection = document.getElementById("episodeSelect");
-  const allSeries = await getAllSeries();
-  makePageForSeries(allSeries, allSeries.length);
- allSeries.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  const allSeriesList = await getAllSeries();
+  allSeriesList.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  makePageForSeries(allSeriesList, allSeriesList.length);
   
-  allSeries.forEach((series) => {
+  allSeriesList.forEach((series) => {
     const option = document.createElement("option");
     option.value = series.id;
     option.textContent = series.name;
     select.appendChild(option);
   });
 }
+// Populate Episodes
 async function populateEpisodeSelect(seriesNo, allEpisodes) {
   const select = document.getElementById("episodeSelect");
   select.innerHTML = ""; // Clear old options
@@ -171,6 +173,7 @@ async function populateEpisodeSelect(seriesNo, allEpisodes) {
 
   select.selectedIndex = 0; // Reset to the first option
 }
+
 // Start with shows list
 window.addEventListener("DOMContentLoaded", async () => {
   await populateSeriesSelect();
