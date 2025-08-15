@@ -5,7 +5,7 @@ let currentView = "series";
 const fetchCache = {}; // catch for fetch results
 
 async function fetchWithCache(url) {
-  if (fetchCache[url])return fetchCache[erl];
+  if (fetchCache[url])return fetchCache[url];
   const response = await fetch(url);
   const data = await response.json();
   fetchCache[url] = data;
@@ -53,6 +53,7 @@ function createSeriesCard(series) {
   const template = document.getElementById("series-card");
   const card = template.content.cloneNode(true);
 
+  card.querySelector(".series").dataset.id = series.id;
   card.querySelector("h3").textContent = series.name;
   card.querySelector("img").src = series.image.medium;
   card.querySelector("img").alt = series.name;
@@ -68,6 +69,9 @@ function makePageForEpisodes(episodeList, numberOfTotal) {
   const rootElem = document.getElementById("episode-count");
   rootElem.textContent = `${episodeList.length} / ${numberOfTotal} Episodes`;
 
+  document.getElementById("episode-container").style.display = "";
+  document.getElementById("series-container").style.display = "none";
+
   const container = document.getElementById("episode-container");
   container.innerHTML = "";
 
@@ -79,7 +83,10 @@ function makePageForSeries(seriesList, numberOfTotal) {
   const rootElem = document.getElementById("episode-count");
   rootElem.textContent = `${seriesList.length} / ${numberOfTotal} Series`;
 
-  const seriesContainer = document.getElementById("episode-container");
+  document.getElementById("series-container").style.display = "";
+  document.getElementById("episode-container").style.display = "none";
+
+  const seriesContainer = document.getElementById("series-container");
   seriesContainer.innerHTML = "";
 
   const seriesCards = seriesList.map(createSeriesCard);
@@ -141,9 +148,10 @@ async function getAllEpisodes(seriesNo) {
  // Populate Series Select
 async function populateSeriesSelect() {
   const select = document.getElementById("seriesSelect");
-  const allSeriesList = await getAllSeries();
-  allSeriesList.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  allSeriesList = await getAllSeries(); 
   makePageForSeries(allSeriesList, allSeriesList.length);
+  allSeriesList.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  
   
   allSeriesList.forEach((series) => {
     const option = document.createElement("option");
@@ -174,6 +182,34 @@ async function populateEpisodeSelect(seriesNo, allEpisodes) {
   select.selectedIndex = 0; // Reset to the first option
 }
 
+// Click on series card to open episodes
+document.getElementById("series-container").addEventListener("click", async (e) => {
+  const seriesCard = e.target.closest(".series");
+  if (seriesCard) {
+    const seriesId = seriesCard.dataset.id;
+    seriesNo = seriesId;
+    allEpisodes = await getAllEpisodes(seriesId);
+    await populateEpisodeSelect(seriesId, allEpisodes);
+    makePageForEpisodes(allEpisodes, allEpisodes.length);
+    currentView = "episodes";
+    backToSeriesBtn.style.display = "inline-block";
+
+  }
+});
+
+// Back to the Series Button
+const backToSeriesBtn = document.getElementById("backToSeries");
+backToSeriesBtn.textContent = "← Back to Series";
+backToSeriesBtn.style.display = "none";
+document.getElementById("root").prepend(backToSeriesBtn);
+
+backToSeriesBtn.addEventListener("click", () => {
+  makePageForSeries(allSeriesList, allSeriesList.length);
+  currentView = "series";
+  backToSeriesBtn.style.display = "none";
+  document.getElementById("episodeSelect").innerHTML = "<option>-- Select an episode --</option>";
+  document.getElementById("episode-count").textContent = `${allSeriesList.length} / ${allSeriesList.length} Series`;
+});
 // Start with shows list
 window.addEventListener("DOMContentLoaded", async () => {
   await populateSeriesSelect();
