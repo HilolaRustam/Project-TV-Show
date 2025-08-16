@@ -34,7 +34,7 @@ h1 {
 }
 
 /* Scrollable Container */
-#container {
+.container {
   display: flex;
   overflow-x: auto;
   gap: 20px;
@@ -43,10 +43,10 @@ h1 {
 }
 
 /* Scrollbar Hidden */
-#container::-webkit-scrollbar {
+.container::-webkit-scrollbar {
   display: none;
 }
-#container {
+.container {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
@@ -108,4 +108,14 @@ h1 {
   font-size: 0.95rem;
   color: #ccc;
   margin-top: 10px;
+}
+
+.series .details {
+  font-size: 0.95rem;
+  color: #fefdfd;
+  width: 150px;
+  height: 150px;
+  background-color: #1c1c1c;
+  border: 3px solid #1c1c1c;
+  margin-top: 50px;
 }
