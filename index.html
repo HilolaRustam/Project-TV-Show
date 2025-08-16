@@ -16,10 +16,15 @@
     </p>
   </header>
   <div id="root">
+        <button id="btnVisible" hidden = true>
+      Make visible
+    </button>
+    <div id="series-selection">
     <label for="seriesSelect">Select Series</label>
     <select id="seriesSelect">
       <option value="">-- Select a Series --</option>
     </select>
+    </div>
     <label for="episodeSelect">Select Episode</label>
     <select id="episodeSelect">
       <option value="">-- Select an episode --</option>
@@ -46,7 +51,7 @@
   <template id="series-card">
     <section class="series">
       <div class="header">
-        <h3>Series title</h3>
+        <h3 id="">Serie title</h3>
         <div>
           <a href="#">
             <img src="" alt="Episode image">
