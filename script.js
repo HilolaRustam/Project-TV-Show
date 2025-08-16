@@ -1,5 +1,7 @@
 let seriesNo = {};
+let allSeries=[];
 let allEpisodes=[];
+let showFlag=true;
 //You can edit ALL of the code here
 
 async function setup() {
@@ -25,6 +27,15 @@ function search(searchText) {
   makePageForEpisodes(searchEpisodes, allEpisodes.length);
 }
 
+function searchForShow(searchText) {
+  const searchEpisodes = allSeries.filter(
+    (serie) =>
+      serie.summary.toLowerCase().includes(searchText.toLowerCase()) ||
+      serie.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+  makePageForSeries(searchEpisodes, allEpisodes.length);
+}
+
 function formatEpisodeCode(season, number) {
   return `S${String(season).padStart(2, "0")}E${String(number).padStart(
     2,
@@ -45,11 +56,23 @@ function createEpisodeCard(episode) {
 }
 
 function createSeriesCard(series) {
+  //console.log(series.id);
   const template = document.getElementById("series-card");
   const card = template.content.cloneNode(true);
 
   const episodeCode = formatEpisodeCode(series.season, series.number);
   card.querySelector("h3").textContent = series.name;
+  card.querySelector("h3").addEventListener("click", async function () {
+    console.log("click"+series.id)
+    const index = series.id;
+    const allSeries = await getAllSeries();
+    allEpisodes = await getAllEpisodes(index); // Store globally
+    await populateEpisodeSelect(index, allEpisodes);
+    makePageForEpisodes(allEpisodes, allEpisodes.length);
+    selected = "episode";
+    document.getElementById("series-selection").hidden = true;
+    document.getElementById("btnVisible").hidden = false;
+  });
   card.querySelector("img").src = series.image.medium;
   card.querySelector("img").alt = series.name;
   card.querySelector(".summary").innerHTML = series.summary;
@@ -61,6 +84,7 @@ function createSeriesCard(series) {
 }
 
 function makePageForEpisodes(episodeList, numberOfTotal) {
+  showFlag=false;
   const rootElem = document.getElementById("episode-count");
   rootElem.textContent = `${episodeList.length} / ${numberOfTotal} Episodes`;
 
@@ -72,6 +96,7 @@ function makePageForEpisodes(episodeList, numberOfTotal) {
 }
 
 function makePageForSeries(seriesList, numberOfTotal) {
+  showFlag=true;
   const rootElem = document.getElementById("episode-count");
   rootElem.textContent = `${seriesList.length} / ${numberOfTotal} Series`;
 
@@ -84,7 +109,12 @@ function makePageForSeries(seriesList, numberOfTotal) {
 
 document.getElementById("searchInput").addEventListener("input", function () {
 
-  search(this.value);
+  if (!showFlag) {
+    search(this.value);
+  }
+  else {
+    searchForShow(this.value);
+  }
 
 });
 
@@ -110,13 +140,34 @@ document
     await populateEpisodeSelect(seriesNo, allEpisodes);
     makePageForEpisodes(allEpisodes, allEpisodes.length);
   });
+  
+  document
+  .getElementById("btnVisible")
+  .addEventListener("click", async function () {
+    document.getElementById("btnVisible").hidden = false;
+    const select = document.getElementById("seriesSelect");
+    const episodeSlection = document.getElementById("episodeSelect");
+    allSeries = await getAllSeries();
+    makePageForSeries(allSeries, allSeries.length);
+
+    allSeries.forEach((serie, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = serie.name;
+      select.appendChild(option);
+    });
+  });
 
 async function getAllSeries() {
-  const url = "https://api.tvmaze.com/shows";
+
+  if (allSeries.length===0){
+    const url = "https://api.tvmaze.com/shows";
   await fetch(url);
   const response = await fetch(url);
-  const data = await response.json();
-  return data;
+   allSeries = await response.json();
+  }
+
+  return allSeries;
 }
 async function getAllEpisodes(seriesNo) {
   const url = "https://api.tvmaze.com/shows/" + seriesNo + "/episodes";
