@@ -67,7 +67,7 @@ function createSeriesCard(series) {
   card.querySelector("img").src = series.image.medium;
   card.querySelector("img").alt = series.name;
   card.querySelector(".summary").innerHTML = series.summary;
-  card.querySelector(".rate").innerHTML = series.rate;
+  card.querySelector(".rating").innerHTML = series.rating?.average?? "N/A";
   card.querySelector(".genres").innerHTML = series.genres;
   card.querySelector(".status").innerHTML = series.status;
   card.querySelector(".runtime").innerHTML = series.runtime;
