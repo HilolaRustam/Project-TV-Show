@@ -36,10 +36,15 @@ h1 {
 /* Scrollable Container */
 .container {
   display: flex;
+  flex-wrap: wrap;                   /*allow wrapping to create vertical space */
+  align-content: flex-start; 
   overflow-x: auto;
+  overflow-y: auto;
   gap: 20px;
   padding: 10px;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: both mandatory;
+  -webkit-overflow-scrolling: touch; /* smooth iOS scrolling */
+  touch-action: pan-x pan-y;
 }
 
 /* Scrollbar Hidden */
