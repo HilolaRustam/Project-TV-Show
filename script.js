@@ -153,17 +153,12 @@ document
 // Fetch all Series
 async function getAllSeries() {
   const url = "https://api.tvmaze.com/shows";
-  await fetch(url);
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+  return await fetchWithCache(url);
 }
 // Fetch all Episodes for a given series
 async function getAllEpisodes(seriesNo) {
-  const url = "https://api.tvmaze.com/shows/" + seriesNo + "/episodes";
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+  const url = `https://api.tvmaze.com/shows/${seriesNo}/episodes`;
+  return await fetchWithCache(url);
 }
  // Populate Series Select
 async function populateSeriesSelect() {
